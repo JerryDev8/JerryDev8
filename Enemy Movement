@@ -1,0 +1,61 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+
+public class EnemyMovement : MonoBehaviour
+{
+
+    NavMeshAgent navMeshAgent;
+    NavMeshPath path;
+    public float timeToChangeToNewPath;
+    bool isInCoroutine;
+    Vector3 target;
+    bool validPath;
+
+
+    // Use this for initialization
+    void Start()
+    {
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        path = new NavMeshPath();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (!isInCoroutine)
+            StartCoroutine(ChangePath());
+    }
+    Vector3 getNewRandomPosition()
+    // setting these ranges is vital larger seems better 
+    {
+        float x = Random.Range(-300, 300);
+        //float y = Random.Range(-20, 20);
+        float z = Random.Range(-300, 300);
+        Vector3 pos = new Vector3(x, 0, z);
+        return pos;
+
+    }
+    IEnumerator ChangePath()
+    {
+        isInCoroutine = true;
+        yield return new WaitForSeconds(timeToChangeToNewPath);
+        MakeANewPath();
+        validPath = navMeshAgent.CalculatePath(target, path);
+        if (!validPath) Debug.Log("found path with no sense");
+        while (!validPath)
+        {
+            yield return new WaitForSeconds(0.01f);
+            MakeANewPath();
+            validPath = navMeshAgent.CalculatePath(target, path);
+        }
+
+        isInCoroutine = false;
+    }
+    void MakeANewPath()
+    {
+        target = getNewRandomPosition();
+        navMeshAgent.SetDestination(target);
+    }
+}
