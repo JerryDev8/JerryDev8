@@ -1,0 +1,60 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+public class InRange : MonoBehaviour
+{
+    [Header("Variables")]
+    public InRange inRange;
+    public bool spotted;
+    public bool isInRange;
+    public float enemyEyeRange;
+    public float stopRange;
+    public bool needsToStop;
+    public NavMeshAgent Enemy;
+    public GameObject Player;
+    public EnemyMovement enemyMovement;
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    void Stop()
+    {
+        if (needsToStop == true)
+        {
+            Enemy.isStopped = true;
+        }
+        if (needsToStop == false && spotted)
+        {
+            Enemy.isStopped = false;
+            Enemy.SetDestination(Player.transform.position);
+        }
+    }
+    void Attack()
+    {
+        if(isInRange == false)
+        {
+          spotted = false;
+            enemyMovement.enabled = true;
+        }
+        if (spotted == true)
+        {
+            Enemy.SetDestination(Player.transform.position);
+            enemyMovement.enabled = false;
+        }
+        if (isInRange == true)
+        {
+            spotted = true;
+        }
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        Attack();
+        Stop();
+        needsToStop = (Physics.Raycast(transform.position, transform.forward, stopRange));
+        isInRange = (Physics.Raycast(transform.position, transform.forward, enemyEyeRange));
+    }
+}
