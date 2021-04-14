@@ -1,0 +1,4 @@
+- 👋 Hi, I’m Jerry
+- 👀 I’m interested in coding in c# and unity!
+- 🌱 I’m currently learning C#
+- 📫 How to reach me : By going to my youtube channel and clicking the twitter icon on my banner!
